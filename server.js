@@ -39,6 +39,27 @@ db.on('error', (err) => console.log(err.message + ' is mongod not running?'));
 db.on('connected', () => console.log('mongod connected: ', MONGODB_URI));
 db.on('disconnected', () => console.log('mongod disconnected'));
 
+// define Mood schema
+const MoodSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  moodRating: {
+    type: Number,
+    required: true,
+  },
+  triggers: {
+    type: [String],
+  },
+  copingStrategies: {
+    type: [String],
+  },
+});
 
 
 
