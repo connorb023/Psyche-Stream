@@ -18,6 +18,9 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());// returns middleware that only parses JSON - may or may not need it depending on your project
 app.use(passport.initialize());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
 
 app.use(methodOverride('_method'));// allow POST, PUT and DELETE from a form
