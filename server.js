@@ -7,7 +7,9 @@ const methodOverride = require('method-override');
 const mongoose = require ('mongoose');
 const app = express();
 const db = mongoose.connection;
-const passport = require('passport'); 
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const cors = require('cors'); 
 
 //Middleware
 
