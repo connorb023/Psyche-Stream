@@ -10,6 +10,16 @@ const db = mongoose.connection;
 const passport = require('passport'); 
 
 //Middleware
+
+//use public folder for static assets
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());// returns middleware that only parses JSON - may or may not need it depending on your project
+app.use(passport.initialize());
+
+
+app.use(methodOverride('_method'));// allow POST, PUT and DELETE from a form
+
 // Connect to the database either via heroku or locally
 const MONGODB_URI = process.env.MONGODB_URI;
 
