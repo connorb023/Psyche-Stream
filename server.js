@@ -60,6 +60,9 @@ const MoodSchema = new mongoose.Schema({
     type: [String],
   },
 });
+// define Mood model
+const Mood = mongoose.model('Mood', MoodSchema);
+
 
 
 
