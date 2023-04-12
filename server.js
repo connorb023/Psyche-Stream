@@ -64,7 +64,7 @@ const MoodSchema = new mongoose.Schema({
 const Mood = mongoose.model('Mood', MoodSchema);
 
 // routes
-app.post('/api/moods', (req, res) => {
+app.post('/moods', (req, res) => {
   const newMood = new Mood({
     user: req.user.id,
     date: req.body.date,
@@ -79,7 +79,7 @@ app.post('/api/moods', (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.get('/api/moods', (req, res) => {
+app.get('/moods', (req, res) => {
   Mood.find({ user: req.user.id })
     .sort({ date: -1 })
     .then((moods) => res.json(moods))
