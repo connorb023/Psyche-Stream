@@ -63,46 +63,44 @@ const MoodSchema = new mongoose.Schema({
 // define Mood model
 const Mood = mongoose.model('Mood', MoodSchema);
 
-// routes
-app.post('/moods', (req, res) => {
-  const newMood = new Mood({
-    user: req.user.id,
-    date: req.body.date,
-    moodRating: req.body.moodRating,
-    triggers: req.body.triggers,
-    copingStrategies: req.body.copingStrategies,
-  });
-
-  newMood
-    .save()
-    .then((mood) => res.json(mood))
-    .catch((err) => console.log(err));
-});
-
+/// define API routes for Mood data
 app.get('/moods', (req, res) => {
-  Mood.find({ user: req.user.id })
-    .sort({ date: -1 })
-    .then((moods) => res.json(moods))
-    .catch((err) => console.log(err));
-});
-
-app.get('/api/moods/:id', (req, res) => {
-  Mood.findById(req.params.id)
-    .then((mood) => res.json(mood))
-    .catch((err) => console.log(err));
-});
-
-app.put('/api/moods/:id', (req, res) => {
-  Mood.findByIdAndUpdate(req.params.id, req.body)
-    .then(() => res.json({ success: true }))
-    .catch((err) => console.log(err));
-});
-
-app.delete('/api/moods/:id', (req, res) => {
-  Mood.findByIdAndDelete(req.params.id)
-    .then(() => res.json({ success: true }))
-    .catch((err) => console.log(err));
-});
+    Mood.find({ user: req.user._id })
+      .sort({ date: -1 })
+      .then((moods) => res.json(moods))
+      .catch((err) => console.log(err));
+  });
+  
+  app.post('/moods', (req, res) => {
+    const newMood = new Mood({
+      user: req.user._id,
+      date: req.body.date,
+      moodRating: req.body.moodRating,
+      triggers: req.body.triggers,
+      copingStrategies: req.body.copingStrategies,
+    });
+  
+    newMood
+      .save()
+      .then((mood) => res.json(mood))
+      .catch((err) => console.log(err));
+  });
+  
+  app.put('/moods/:id', (req, res) => {
+    Mood.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      { $set: req.body },
+      { new: true }
+    )
+      .then((mood) => res.json(mood))
+      .catch((err) => console.log(err));
+  });
+  
+  app.delete('/moods/:id', (req, res) => {
+    Mood.findOneAndDelete({ _id: req.params.id, user: req.user._id })
+      .then(() => res.json({ success: true }))
+      .catch((err) => console.log(err));
+  });  
 
 
 
