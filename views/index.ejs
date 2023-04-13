@@ -1,5 +1,3 @@
-<!-- views/index.ejs -->
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,4 +13,26 @@
       <input type="date" name="date" required>
       <label for="rating">Rating:</label>
       <input type="number" name="rating" min="1" max="10" required>
-      <label for="
+      <label for="triggers">Triggers:</label>
+      <textarea name="triggers"></textarea>
+      <label for="copingStrategies">Coping Strategies:</label>
+      <textarea name="copingStrategies"></textarea>
+      <button type="submit">Add Mood</button>
+    </form>
+    <h2>All Moods</h2>
+    <ul>
+      <% moods.forEach(function(mood) { %>
+        <li>
+          <span><%= mood.date.toDateString() %></span>
+          <span>Rating: <%= mood.rating %></span>
+          <% if (mood.triggers) { %>
+            <p>Triggers: <%= mood.triggers %></p>
+          <% } %>
+          <% if (mood.copingStrategies) { %>
+            <p>Coping Strategies: <%= mood.copingStrategies %></p>
+          <% } %>
+        </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>
