@@ -33,7 +33,22 @@ function App() {
       .then(res => setMoods(moods.map(mood => mood._id === id ? res.data : mood)))
       .catch(err => console.log(err));
   };
-
+  render()
+    return (
+      <div>
+        <Navigation />
+        <main>
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/moods" component={MoodList} />
+            <Route exact path="/moods/new" component={MoodForm} />
+            <Route exact path="/moods/:id/edit" component={MoodForm} />
+          </Switch>
+        </main>
+      </div>
+    );
+  }
+  
   return (
     <Router>
       <div className="container">
@@ -46,8 +61,7 @@ function App() {
           <Route exact path="/mood/:id" render={(props) => <MoodItem {...props} deleteMood={deleteMood} />} />
         </Switch>
       </div>
-    </Router>
+    </Router> 
   );
-}
 
 export default App;
