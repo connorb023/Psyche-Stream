@@ -1,23 +1,35 @@
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import Mood from '../models/Mood';
 
-const BASE_URL = 'http://localhost:5000';
+function MoodList() {
+  const [moods, setMoods] = useState([]);
 
-class Mood {
-  static all() {
-    return axios.get(`${BASE_URL}/moods`, { withCredentials: true });
+  useEffect(() => {
+    Mood.all().then((res) => setMoods(res.data));
+  }, []);
+
+  function handleDelete(id) {
+    Mood.delete(id).then(() => {
+      setMoods(moods.filter((mood) => mood._id !== id));
+    });
   }
 
-  static create(data) {
-    return axios.post(`${BASE_URL}/moods`, data, { withCredentials: true });
-  }
-
-  static update(id, data) {
-    return axios.put(`${BASE_URL}/moods/${id}`, data, { withCredentials: true });
-  }
-
-  static delete(id) {
-    return axios.delete(`${BASE_URL}/moods/${id}`, { withCredentials: true });
-  }
+  return (
+    <div>
+      <h1>Mood List</h1>
+      <ul>
+        {moods.map((mood) => (
+          <li key={mood._id}>
+            <p>Date: {new Date(mood.date).toLocaleDateString()}</p>
+            <p>Mood rating: {mood.moodRating}</p>
+            <p>Triggers: {mood.triggers.join(', ')}</p>
+            <p>Coping strategies: {mood.copingStrategies.join(', ')}</p>
+            <button onClick={() => handleDelete(mood._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default Mood;
+export default MoodList;
