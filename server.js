@@ -8,6 +8,7 @@ const app = express();
 const db = mongoose.connection;
 const bodyParser = require('body-parser');
 
+
 //Middleware
 
 //use public folder for static assets
