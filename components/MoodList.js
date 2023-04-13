@@ -25,7 +25,27 @@ function MoodList() {
       setMoods(moods.filter((mood) => mood._id !== id));
     });
   }
-
+//   fetch mood data from the server
+  class MoodList extends Component {
+    constructor(props) {
+      super(props);
+      this.state = { moods: [] };
+    }
+  
+    async componentDidMount() {
+      const response = await Mood.all();
+      const moods = response.data;
+      this.setState({ moods });
+    }
+  
+    render() {
+      const moodItems = this.state.moods.map(mood => (
+        <MoodItem key={mood._id} mood={mood} />
+      ));
+      return <div>{moodItems}</div>;
+    }
+  }
+  //
   return (
     <div>
       <h1>Mood List</h1>
