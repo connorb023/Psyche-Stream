@@ -30,7 +30,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // May or may not need these depending on your Mongoose version
 // mongoose.connect(MONGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }
 // );
-mongoose.connect('mongodb://localhost/mood-tracker', {
+mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost:27017/moodtracker',{
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
