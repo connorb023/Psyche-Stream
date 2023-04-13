@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createMood, updateMood } from '../actions/moodActions';
+import axios from 'axios';
 
-const MoodForm = ({ createMood, updateMood, currentMood, clearCurrentMood }) => {
+const MoodForm = ({ currentMood, clearCurrentMood }) => {
   const [mood, setMood] = useState({
     date: '',
     moodRating: '',
@@ -15,15 +14,19 @@ const MoodForm = ({ createMood, updateMood, currentMood, clearCurrentMood }) => 
 
   const onChange = (e) => setMood({ ...mood, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    if (currentMood) {
-      updateMood({ ...mood, _id: currentMood._id });
-      clearCurrentMood();
-    } else {
-      createMood(mood);
+    try {
+      if (currentMood) {
+        await axios.put(`/moods/${currentMood._id}`, mood, { withCredentials: true });
+        clearCurrentMood();
+      } else {
+        await axios.post('/moods', mood, { withCredentials: true });
+      }
+      setMood({ date: '', moodRating: '', triggers: '', copingStrategies: '' });
+    } catch (err) {
+      console.error(err);
     }
-    setMood({ date: '', moodRating: '', triggers: '', copingStrategies: '' });
   };
 
   return (
@@ -58,14 +61,8 @@ const MoodForm = ({ createMood, updateMood, currentMood, clearCurrentMood }) => 
 };
 
 MoodForm.propTypes = {
-  createMood: PropTypes.func.isRequired,
-  updateMood: PropTypes.func.isRequired,
   currentMood: PropTypes.object,
   clearCurrentMood: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  currentMood: state.mood.currentMood,
-});
-
-export default connect(mapStateToProps, { createMood, updateMood })(MoodForm);
+export default MoodForm;
