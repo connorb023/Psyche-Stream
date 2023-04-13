@@ -1,12 +1,4 @@
 require('dotenv').config();
-
-if (!process.env.MONGODB_URL) {
-  console.error('MONGODB_URL not found. Please make sure you have defined it in your .env file or environment variables');
-  process.exit(1);
-}
-
-console.log(process.env.MONGODB_URL);
-
 // Dependencies
 const express = require('express');
 const methodOverride = require('method-override');
@@ -14,6 +6,7 @@ const mongoose = require('mongoose');
 const app = express();
 const db = mongoose.connection;
 const bodyParser = require('body-parser');
+const Mood = require('./models/mood');
 
 // Middleware
 app.use(express.static('public'));
