@@ -6,11 +6,12 @@ const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
 const Mood = require('./models/mood');
+const moodController = require('./controllers/moodController');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
