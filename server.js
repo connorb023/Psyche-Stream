@@ -1,47 +1,40 @@
-require('dotenv').config()
+require('dotenv').config();
 
-//Dependencies
+if (!process.env.MONGODB_URL) {
+  console.error('MONGODB_URL not found. Please make sure you have defined it in your .env file or environment variables');
+  process.exit(1);
+}
+
+console.log(process.env.MONGODB_URL);
+
+// Dependencies
 const express = require('express');
 const methodOverride = require('method-override');
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const app = express();
 const db = mongoose.connection;
 const bodyParser = require('body-parser');
 
-
-//Middleware
-
-//use public folder for static assets
+// Middleware
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());// returns middleware that only parses JSON - may or may not need it depending on your project
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(methodOverride('_method'));
 
-
-
-app.use(methodOverride('_method'));// allow POST, PUT and DELETE from a form
-
-// Connect to the database either via heroku or locally
-const MONGODB_URI = process.env.MONGODB_URI;
-
-// Connect to Mongo &
-// Fix Depreciation Warnings from Mongoose
-// May or may not need these depending on your Mongoose version
-// mongoose.connect(MONGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }
-// );
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost:27017/moodtracker',{
+// Connect to the database
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 // Error / success
 db.on('error', (err) => console.log(err.message + ' is mongo not running?'));
 db.on('connected', () => console.log('mongo connected: '));
 db.on('disconnected', () => console.log('mongo disconnected'));
 
-// define Mood schema
+// Define Mood schema
 const MoodSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -62,50 +55,61 @@ const MoodSchema = new mongoose.Schema({
     type: [String],
   },
 });
-// define Mood model
+
+// Define Mood model
 const Mood = mongoose.model('Mood', MoodSchema);
 
-/// define API routes for Mood data
+// API routes for Mood data
 app.get('/moods', (req, res) => {
-    Mood.find({ user: req.user._id })
-      .sort({ date: -1 })
-      .then((moods) => res.json(moods))
-      .catch((err) => console.log(err));
-  });
-  
-  app.post('/moods', (req, res) => {
-    const newMood = new Mood({
-      user: req.user._id,
-      date: req.body.date,
-      moodRating: req.body.moodRating,
-      triggers: req.body.triggers,
-      copingStrategies: req.body.copingStrategies,
+  if (!req.user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  Mood.find({ user: req.user._id })
+    .sort({ date: -1 })
+    .then((moods) => {
+      if (!moods) {
+        return res.status(404).json({ error: 'No moods found' });
+      }
+      res.json(moods);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal server error' });
     });
-  
-    newMood
-      .save()
-      .then((mood) => res.json(mood))
-      .catch((err) => console.log(err));
+});
+
+app.post('/moods', (req, res) => {
+  const newMood = new Mood({
+    user: req.user._id,
+    date: req.body.date,
+    moodRating: req.body.moodRating,
+    triggers: req.body.triggers,
+    copingStrategies: req.body.copingStrategies,
   });
-  
-  app.put('/moods/:id', (req, res) => {
-    Mood.findOneAndUpdate(
-      { _id: req.params.id, user: req.user._id },
-      { $set: req.body },
-      { new: true }
-    )
-      .then((mood) => res.json(mood))
-      .catch((err) => console.log(err));
-  });
-  
-  app.delete('/moods/:id', (req, res) => {
-    Mood.findOneAndDelete({ _id: req.params.id, user: req.user._id })
-      .then(() => res.json({ success: true }))
-      .catch((err) => console.log(err));
-  });  
 
+  newMood
+    .save()
+    .then((mood) => res.json(mood))
+    .catch((err) => console.log(err));
+});
 
+app.put('/moods/:id', (req, res) => {
+  Mood.findOneAndUpdate(
+    { _id: req.params.id, user: req.user._id },
+    { $set: req.body },
+    { new: true }
+  )
+    .then((mood) => res.json(mood))
+    .catch((err) => console.log(err));
+});
 
-// start server
+app.delete('/moods/:id', (req, res) => {
+  Mood.findOneAndDelete({ _id: req.params.id, user: req.user._id })
+    .then(() => res.json({ success: true }))
+    .catch((err) => console.log(err));
+});
+
+// Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
