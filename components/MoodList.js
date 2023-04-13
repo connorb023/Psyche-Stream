@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Mood from './models/Mood';
 import React from 'react';
 import MoodItem from './MoodItem';
+import axios from 'axios';
+const BASE_URL = 'http://localhost:3000';
+
 
 const MoodList = ({ moods, onDelete, onEdit }) => {
     return (

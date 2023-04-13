@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+const BASE_URL = 'http://localhost:3000';
 
 const MoodForm = ({ currentMood, clearCurrentMood }) => {
   const [mood, setMood] = useState({
