@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Mood from '../models/Mood';
+import Mood from './models/Mood';
+import React from 'react';
+import MoodItem from './MoodItem';
+
+const MoodList = ({ moods, onDelete, onEdit }) => {
+    return (
+      <div>
+        {moods.map((mood) => (
+          <MoodItem key={mood._id} mood={mood} onDelete={onDelete} onEdit={onEdit} />
+        ))}
+      </div>
+    );
+  };
 
 function MoodList() {
   const [moods, setMoods] = useState([]);
