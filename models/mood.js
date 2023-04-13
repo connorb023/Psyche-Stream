@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:5000';
 
 class Mood {
   static all() {
@@ -21,3 +20,14 @@ class Mood {
 }
 
 export default Mood;
+
+// Add the following code to the bottom of the file
+const mongoose = require('mongoose');
+
+const moodSchema = new mongoose.Schema({
+  mood: { type: String, required: true },
+  date: { type: Date, default: Date.now },
+  notes: { type: String },
+});
+
+module.exports = mongoose.model('Mood', moodSchema);
