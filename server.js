@@ -1,6 +1,5 @@
 require('dotenv').config()
 
-
 //Dependencies
 const express = require('express');
 const methodOverride = require('method-override');
@@ -31,13 +30,18 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Connect to Mongo &
 // Fix Depreciation Warnings from Mongoose
 // May or may not need these depending on your Mongoose version
-mongoose.connect(MONGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }
-);
+// mongoose.connect(MONGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }
+// );
+mongoose.connect('mongodb://localhost/mood-tracker', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 
 // Error / success
-db.on('error', (err) => console.log(err.message + ' is mongod not running?'));
-db.on('connected', () => console.log('mongod connected: ', MONGODB_URI));
-db.on('disconnected', () => console.log('mongod disconnected'));
+db.on('error', (err) => console.log(err.message + ' is mongo not running?'));
+db.on('connected', () => console.log('mongo connected: ', MONGODB_URI));
+db.on('disconnected', () => console.log('mongo disconnected'));
 
 // define Mood schema
 const MoodSchema = new mongoose.Schema({
