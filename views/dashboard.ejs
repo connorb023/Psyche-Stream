@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker Dashboard</title>
+  </head>
+  <body>
+    <h1>Mood Tracker Dashboard</h1>
+    <h2>Add New Mood</h2>
+    <form action="/moods" method="POST">
+      <label for="date">Date:</label>
+      <input type="date" name="date" required>
+      <label for="rating">Rating:</label>
+      <input type="number" name="rating" min="1" max="10" required>
+      <label for="triggers">Triggers:</label>
+      <textarea name="triggers"></textarea>
+      <label for="copingStrategies">Coping Strategies:</label>
+      <textarea name="copingStrategies"></textarea>
+      <button type="submit">Add Mood</button>
+    </form>
+    <h2>All Moods</h2>
+    <ul>
+      <% moods.forEach(function(mood) { %>
+        <li>
+          <span><%= mood.date.toDateString() %></span>
+          <span>Rating: <%= mood.rating %></span>
+          <% if (mood.triggers) { %>
+            <p>Triggers: <%= mood.triggers %></p>
+          <% } %>
+          <% if (mood.copingStrategies) { %>
+            <p>Coping Strategies: <%= mood.copingStrategies %></p>
+          <% } %>
+        </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>
