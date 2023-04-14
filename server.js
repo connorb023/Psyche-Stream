@@ -10,6 +10,7 @@ const moodController = require('./controllers/moodController');
 const userRoutes = require('./controllers/userRoutes');
 const session = require('express-session');
 
+
 // Middleware
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
@@ -20,6 +21,10 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use('/user', userRoutes);
 app.post('/moods', moodController.createMood);
+app.get('/mood', moodController.getAllMoods);
+app.get('/mood/:id', moodController.getMoodById);
+app.put('/mood/:id', moodController.updateMood);
+app.delete('/mood/:id', moodController.deleteMood);
 app.use(session({
     secret: 'mysecret', // Replace with your own secret key
     resave: false,
@@ -142,3 +147,4 @@ const requireLogin = (req, res, next) => {
 // Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
