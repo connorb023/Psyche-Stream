@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const Mood = require('./models/mood');
 const moodController = require('./controllers/moodController');
 const userRoutes = require('./controllers/userRoutes');
-
+const session = require('express-session');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
@@ -20,6 +20,11 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use('/user', userRoutes);
 app.post('/moods', moodController.createMood);
+app.use(session({
+    secret: 'mysecret', // Replace with your own secret key
+    resave: false,
+    saveUninitialized: false
+  }));
 
 
 
@@ -85,9 +90,9 @@ Mood.find().sort('-date').exec()
   
   function checkCredentials(username, password) {
     // Check credentials and return boolean value
-    // You can replace this with your own authentication logic
-    return (username === 'example' && password === 'password');
-  }
+    // Replace this with your own authentication logic
+    return (username === 'connorcb@yahoo.com' && password === 'mypassword');
+  }  
   
   
 const requireLogin = (req, res, next) => {
@@ -108,8 +113,31 @@ const requireLogin = (req, res, next) => {
   }
   
   app.get('/dashboard', requireLogin, (req, res) => {
-    res.render('dashboard');
+    Mood.find().sort('-date').exec()
+      .then((moods) => {
+        res.render('dashboard', { moods });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+      });
   });
+  
+  app.post('/add', function(req, res) {
+    // create a new mood object with the submitted form data
+    const newMood = {
+      date: new Date(),
+      rating: req.body.rating,
+      comment: req.body.comment
+    };
+  
+    // push the new mood object into the moods array
+    moods.push(newMood);
+  
+    // render the dashboard template with the updated moods array
+    res.render('dashboard', { moods: moods });
+  });
+  
   
 // Start server
 const port = process.env.PORT || 3000;

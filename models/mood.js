@@ -2,16 +2,27 @@
 
 const mongoose = require('mongoose');
 
-const MoodSchema = new mongoose.Schema({
-  date: { type: Date, required: true },
-  rating: { type: Number, required: true },
-  triggers: { type: String },
-  copingStrategies: { type: String },emotion: { type: String, required: true },
-  description: { type: String },
-  user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
-}, { timestamps: true });
+const moodSchema = new mongoose.Schema({
+//   moodType: {
+//     type: String,
+//     required: true
+//   },
+  rating: {
+    type: Number,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  description: {
+    type: String,
+    trim: true
+  }
+});
 
-const Mood = mongoose.model('Mood', MoodSchema);
+const Mood = mongoose.model('Mood', moodSchema);
 
 module.exports = Mood;
 

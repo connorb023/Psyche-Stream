@@ -1,29 +1,26 @@
 // create new mood
 const Mood = require('../models/mood');
 
+// Add a new mood
 exports.createMood = async (req, res) => {
+  // const userId = req.user.id; // Get the user's ID from the request object
+  
+  const mood = new Mood({
+    moodType: req.body.moodType,
+    rating: req.body.rating,
+    date: req.body.date,
+    description: req.body.description,
+  });
+
   try {
-    // Ensure that user is authenticated and add their information to the request object
-    if (!req.user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const mood = new Mood({
-      moodType: req.body.moodType,
-      note: req.body.note,
-      date: req.body.date,
-      time: req.body.time,
-      user: req.user.id, // Use user id from the request object
-    });
-
-    await mood.save();
-    res.send(mood);
-  } catch (error) {
-    console.log('error:', error);
-    res.status(500).send(error);
+    const newMood = await mood.save();
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating new mood');
   }
 };
-
+  
 // exports.createMood = (req, res) => {
 //   const { emotion, intensity, description } = req.body;
 //   const newMood = new Mood({
@@ -32,16 +29,6 @@ exports.createMood = async (req, res) => {
 //     description,
 //     user: req.user.id
 //   });
-//   newMood.save()
-//     .then(mood => {
-//       console.log(mood);
-//       res.redirect('/');
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json({ error: err });
-//     });
-// };
 
 exports.getAllMoods = (req, res) => {
   Mood.find({ user: req.user.id })
