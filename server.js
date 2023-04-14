@@ -35,7 +35,7 @@ db.on('error', (err) => console.log(err.message + ' is mongo not running?'));
 db.on('connected', () => console.log('mongo connected: '));
 db.on('disconnected', () => console.log('mongo disconnected'));
 
-app.get('/', (req, res) => {
+app.get('/moods', (req, res) => {
     // Find all moods
 Mood.find().sort('-date').exec()
 .then((moods) => {
@@ -48,11 +48,69 @@ Mood.find().sort('-date').exec()
 });
 
   });
+  app.get('/', (req, res) => {
+    if (req.session && req.session.userId) {
+      // User is logged in, so find all moods and render the index view with the list of moods
+      Mood.find().sort('-date').exec()
+      .then((moods) => {
+        res.render('index', { moods });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+      });
+    } else {
+      // User is not logged in, so redirect to the login page
+      res.redirect('/login');
+    }
+  });
+  
   app.get('/login', (req, res) => {
     res.render('login');
   });
+
+  app.post('/login', function(req, res) {
+    // Check user credentials
+    const authenticated = checkCredentials(req.body.username, req.body.password);
+  
+    if (authenticated) {
+      // Set session variable and redirect to dashboard
+      req.session.isLoggedIn = true;
+      res.redirect('/dashboard');
+    } else {
+      // Render login page with error message
+      res.render('login', { message: 'Invalid username or password.' });
+    }
+  });
+  
+  function checkCredentials(username, password) {
+    // Check credentials and return boolean value
+    // You can replace this with your own authentication logic
+    return (username === 'example' && password === 'password');
+  }
+  
+  
+const requireLogin = (req, res, next) => {
+    if (req.session.isLoggedIn) {
+      next();
+    } else {
+      res.redirect('/login');
+    }
+  };
   
 
+  
+  function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/login');
+  }
+  
+  app.get('/dashboard', requireLogin, (req, res) => {
+    res.render('dashboard');
+  });
+  
 // Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
