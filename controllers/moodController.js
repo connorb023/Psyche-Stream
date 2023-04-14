@@ -10,6 +10,8 @@ exports.createMood = async (req, res) => {
     rating: req.body.rating,
     date: req.body.date,
     description: req.body.description,
+    triggers: req.body.triggers,
+    copingStrategies: req.body.copingStrategies,
   });
 
   try {
@@ -48,10 +50,17 @@ exports.updateMood = (req, res) => {
     .catch(error => res.status(404).json({ error }));
 };
 
-exports.deleteMood = (req, res) => {
-  Mood.findOneAndDelete({ _id: req.params.id, user: req.user.id })
-    .then(() => res.status(204).json())
-    .catch(error => res.status(404).json({ error }));
+exports.deleteMood = async (req, res) => {
+  try {
+    const deletedMood = await Mood.findByIdAndDelete(req.params.moodId);
+    if (!deletedMood) {
+      return res.status(404).send('Mood not found');
+    }
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error deleting mood');
+  }
 };
 
 // Path: controllers/userController.js

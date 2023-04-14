@@ -19,8 +19,12 @@ const moodSchema = new mongoose.Schema({
   description: {
     type: String,
     trim: true
-  }
+  },
+  triggers: [{ type: String }],
+  copingStrategies: [{ type: String }],
 });
+
+
 
 const Mood = mongoose.model('Mood', moodSchema);
 

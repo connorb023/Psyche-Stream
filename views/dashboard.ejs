@@ -41,6 +41,10 @@
           <% if (mood.copingStrategies) { %>
             <p>Coping Strategies: <%= mood.copingStrategies %></p>
           <% } %>
+          <form method="POST" action="/mood/{{ mood._id }}?_method=DELETE">
+            <button type="submit">Delete</button>
+          </form>
+          </form>
         </li>
       <% }); %>
     </ul>
