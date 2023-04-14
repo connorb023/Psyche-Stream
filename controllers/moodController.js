@@ -85,9 +85,6 @@
 //   }
 // });
 
-// module.exports = router;
-const Mood = require('../models/mood');
-
 // create new mood
 const Mood = require('../models/mood');
 
@@ -99,7 +96,7 @@ exports.createMood = (req, res) => {
     description,
     user: req.user.id
   });
-  newMood.save()
+  Mood.create(newMood)
     .then(mood => res.status(201).json(mood))
     .catch(error => res.status(500).json({ error }));
 };

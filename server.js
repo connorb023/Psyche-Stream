@@ -7,6 +7,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const Mood = require('./models/mood');
 const moodController = require('./controllers/moodController');
+const userRoutes = require('./controllers/userRoutes');
+
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
@@ -16,7 +18,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
-app.use('/api/users', userRoutes);
+app.use('/user', userRoutes);
+
 
 // Connect to the database
 mongoose.connect(process.env.MONGODB_URL, {
