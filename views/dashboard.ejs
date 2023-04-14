@@ -12,7 +12,6 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/logout">Logout</a></li>
         </ul>
       </nav>
       
@@ -29,7 +28,7 @@
       <textarea name="copingStrategies"></textarea>
       <button type="submit">Add Mood</button>
     </form>
-    <h2>All Moods</h2>
+    <h2>Experiences</h2>
     <ul>
       <% moods.forEach(function(mood) { %>
         <li>
@@ -41,9 +40,8 @@
           <% if (mood.copingStrategies) { %>
             <p>Coping Strategies: <%= mood.copingStrategies %></p>
           <% } %>
-          <form method="POST" action="/mood/{{ mood._id }}?_method=DELETE">
+          <form method="POST" action="/mood/<%= mood._id %>?_method=DELETE">
             <button type="submit">Delete</button>
-          </form>
           </form>
         </li>
       <% }); %>
