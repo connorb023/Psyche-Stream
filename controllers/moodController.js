@@ -44,4 +44,4 @@ exports.deleteMood = (req, res) => {
     .catch(error => res.status(404).json({ error }));
 };
 
-module.exports = { createMood }
+// Path: controllers/userController.js

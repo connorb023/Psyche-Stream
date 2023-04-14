@@ -49,27 +49,6 @@ Mood.find().sort('-date').exec()
 
   });
   
-//   app.post('/moods', (req, res) => {
-//     const { emotion, intensity, description } = req.body;
-//     const newMood = new Mood({
-//       emotion,
-//       intensity,
-//       description,
-//       user: req.user.id
-//     });
-//     newMood.save()
-//       .then(mood => {
-//         console.log(mood);
-//         res.redirect('/');
-//       })
-//       .catch(err => {
-//         console.log(err);
-//         res.status(500).json({ error: err });
-//       });
-//   });
-  
-  
-
 // Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
