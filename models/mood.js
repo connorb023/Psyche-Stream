@@ -7,7 +7,6 @@ const MoodSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   triggers: { type: String },
   copingStrategies: { type: String },emotion: { type: String, required: true },
-  intensity: { type: Number, required: true },
   description: { type: String },
   user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 }, { timestamps: true });
