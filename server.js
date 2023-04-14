@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
+app.use('/api/users', userRoutes);
 
 // Connect to the database
 mongoose.connect(process.env.MONGODB_URL, {
@@ -30,13 +31,17 @@ db.on('connected', () => console.log('mongo connected: '));
 db.on('disconnected', () => console.log('mongo disconnected'));
 
 app.get('/', (req, res) => {
-    Mood.find({}, (err, moods) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render('index', { moods: moods });
-      }
-    });
+    // Find all moods
+Mood.find().sort('-date').exec()
+.then((moods) => {
+  // Render the index view with the list of moods
+  res.render('index', { moods });
+})
+.catch((err) => {
+  console.error(err);
+  res.status(500).send('Internal Server Error');
+});
+
   });
   
   app.post('/', (req, res) => {
