@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use('/user', userRoutes);
+app.post('/moods', moodController.createMood);
+
 
 
 // Connect to the database
@@ -47,22 +49,25 @@ Mood.find().sort('-date').exec()
 
   });
   
-  app.post('/', (req, res) => {
-    const newMood = {
-      date: req.body.date,
-      rating: req.body.rating,
-      triggers: req.body.triggers,
-      copingStrategies: req.body.copingStrategies,
-    };
-    Mood.create(newMood, (err, mood) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(mood);
-        res.redirect('/');
-      }
-    });
-  });
+//   app.post('/moods', (req, res) => {
+//     const { emotion, intensity, description } = req.body;
+//     const newMood = new Mood({
+//       emotion,
+//       intensity,
+//       description,
+//       user: req.user.id
+//     });
+//     newMood.save()
+//       .then(mood => {
+//         console.log(mood);
+//         res.redirect('/');
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json({ error: err });
+//       });
+//   });
+  
   
 
 // Start server

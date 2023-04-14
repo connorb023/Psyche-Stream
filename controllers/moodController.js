@@ -1,90 +1,3 @@
-// const express = require('express');
-// const router = express.Router();
-// const Mood = require('../models/mood');
-
-// // GET all moods
-// router.get('/', async (req, res) => {
-//   try {
-//     const moods = await Mood.find();
-//     res.render('index', { moods });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-// // GET new mood form
-// router.get('/moods/new', (req, res) => {
-//   res.render('new');
-// });
-
-// // Create new mood
-// exports.create = (req, res) => {
-// const mood = new Mood({
-//   feeling: req.body.feeling,
-//   description: req.body.description,
-//   date: new Date(),
-// });
-// // router.post('/moods', async (req, res) => {
-
-// //     const mood = new Mood({
-// //       date: req.body.date,
-// //       rating: req.body.rating,
-// //       triggers: req.body.triggers,
-// //       copingStrategies: req.body.copingStrategies
-// //     });
-// //     });
-
-//     mood.save()
-//   .then(() => {
-//     // Redirect to the index page after successfully creating the new mood
-//     res.redirect('/');
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//     res.status(500).send('Internal Server Error');
-//   });
-// };
-
-
-// // Edit mood form
-// router.get('/moods/:id/edit', async (req, res) => {
-//   try {
-//     const mood = await Mood.findById(req.params.id);
-//     res.render('edit', { mood });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-// // Update mood
-// router.put('/moods/:id', async (req, res) => {
-//   try {
-//     await Mood.findByIdAndUpdate(req.params.id, {
-//       date: req.body.date,
-//       rating: req.body.rating,
-//       triggers: req.body.triggers,
-//       copingStrategies: req.body.copingStrategies
-//     });
-//     res.redirect('/');
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-// // DELETE mood
-// router.delete('/moods/:id', async (req, res) => {
-//   try {
-//     await Mood.findByIdAndDelete(req.params.id);
-//     res.redirect('/');
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
 // create new mood
 const Mood = require('../models/mood');
 
@@ -96,9 +9,15 @@ exports.createMood = (req, res) => {
     description,
     user: req.user.id
   });
-  Mood.create(newMood)
-    .then(mood => res.status(201).json(mood))
-    .catch(error => res.status(500).json({ error }));
+  newMood.save()
+    .then(mood => {
+      console.log(mood);
+      res.redirect('/');
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
 };
 
 exports.getAllMoods = (req, res) => {
@@ -125,3 +44,4 @@ exports.deleteMood = (req, res) => {
     .catch(error => res.status(404).json({ error }));
 };
 
+module.exports = { createMood }
